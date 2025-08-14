@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Query, Depends, HTTPException
 from sqlalchemy.orm import Session
-from db import models
+from db import models, schemas
 from db.database import SessionLocal, engine
 models.Base.metadata.create_all(bind=engine)
 
@@ -52,7 +52,7 @@ async def add_book(author: str=Query(..., min_length=4, max_length=50, title="Au
 def all_books():
     return library
 
-@app.get("/all_books/", response_model=list[models.Book])
+@app.get("/all_books/", response_model=list[schemas.BookBase])
 def get_all_books(db: Session = Depends(get_db)):
     books = db.query(models.Book).all()
     return books
